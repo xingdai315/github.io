@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright (c) 2020.</copyright>
-    <lastBuildDate>Fri, 31 Jan 2020 18:49:07 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 02 Feb 2020 01:20:03 +0800</lastBuildDate>
     
 	<atom:link href="https://ddmmyy.cc/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>从github下载龟速暂时解决方法</title>
+      <link>https://ddmmyy.cc/post/%E4%BB%8Egithub%E4%B8%8B%E8%BD%BD%E9%BE%9F%E9%80%9F%E6%9A%82%E6%97%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Sun, 02 Feb 2020 01:20:03 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/%E4%BB%8Egithub%E4%B8%8B%E8%BD%BD%E9%BE%9F%E9%80%9F%E6%9A%82%E6%97%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</guid>
+      <description>从github下载龟速暂时解决方法 坐标北京电信，github主站目前速度还可以接受。但有些基于brew等需要从github上下载软件就变得非常缓慢，基本在1kB左右的下载速度，堪比电话拨号。。
+下载过程显示github跳转域名如下，问题出在了github的CDN上。amazonaws估计被干扰了。
+github-production-release-asset-2e65be.s3.amazonaws.com dig信息查询一下CNAME域名
+github-production-release-asset-2e65be.s3.amazonaws.com. 30 IN CNAME s3-1-w.amazonaws.com. s3-1-w.amazonaws.com.	30	IN	A	52.217.10.180 通过大名鼎鼎的IPaddress.com 查询一下该域名的本地解析的另一个地址
+Domain	amazonaws.com IP Address	52.216.240.68 Web Server Location	United States 直接加到hosts试试，我mac上用的Gas Mask。
+52.216.240.68	s3-1-w.amazonaws.com 确认没有缓存后再测试，15KB/s &amp;hellip; 提升15倍 &amp;hellip;.
+值得庆祝一下</description>
+    </item>
     
     <item>
       <title>Kvm_base_Archlinux</title>

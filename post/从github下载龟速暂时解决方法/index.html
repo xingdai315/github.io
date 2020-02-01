@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Ryan.Day">
+  <meta property="og:url" content="https://ddmmyy.cc/post/%E4%BB%8Egithub%E4%B8%8B%E8%BD%BD%E9%BE%9F%E9%80%9F%E6%9A%82%E6%97%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
+
+  <title>从github下载龟速暂时解决方法 - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="从github下载龟速暂时解决方法 - 🈚️他 ，唯🤚熟尔">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/ohmysite.ico" />
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="🈚️他 ，唯🤚熟尔">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://ddmmyy.cc/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">从github下载龟速暂时解决方法</h1>
+      <time class="post-date" datetime="2020-02-02 01:20:03 CST">02 Feb 2020</time>
+    </header>
+
+    <h3 id="从github下载龟速暂时解决方法">从github下载龟速暂时解决方法</h3>
+<p>坐标北京电信，github主站目前速度还可以接受。但有些基于brew等需要从github上下载软件就变得非常缓慢，基本在1kB左右的下载速度，堪比电话拨号。。</p>
+<p>下载过程显示github跳转域名如下，问题出在了github的CDN上。amazonaws估计被干扰了。</p>
+<pre><code>github-production-release-asset-2e65be.s3.amazonaws.com
+</code></pre><p>dig信息查询一下CNAME域名</p>
+<pre><code>github-production-release-asset-2e65be.s3.amazonaws.com. 30 IN CNAME s3-1-w.amazonaws.com.
+s3-1-w.amazonaws.com.	30	IN	A	52.217.10.180
+</code></pre><p>通过大名鼎鼎的IPaddress.com 查询一下该域名的本地解析的另一个地址</p>
+<pre><code>Domain	amazonaws.com
+IP Address	
+52.216.240.68
+Web Server Location	United States
+</code></pre><p>直接加到hosts试试，我mac上用的Gas Mask。</p>
+<pre><code>52.216.240.68		s3-1-w.amazonaws.com
+</code></pre><p>确认没有缓存后再测试，15KB/s &hellip; 提升15倍 &hellip;.</p>
+<p>值得庆祝一下</p>
+
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="https://ddmmyy.cc/">
+          <span itemprop="name">Ryan.Day</span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

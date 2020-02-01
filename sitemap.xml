@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://ddmmyy.cc/post/kvm_base_archlinux/</loc>
-    <lastmod>2020-01-31T18:49:07+08:00</lastmod>
+    <loc>https://ddmmyy.cc/post/</loc>
+    <lastmod>2020-02-02T01:20:03+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ddmmyy.cc/post/</loc>
-    <lastmod>2020-01-31T18:49:07+08:00</lastmod>
+    <loc>https://ddmmyy.cc/post/%E4%BB%8Egithub%E4%B8%8B%E8%BD%BD%E9%BE%9F%E9%80%9F%E6%9A%82%E6%97%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</loc>
+    <lastmod>2020-02-02T01:20:03+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://ddmmyy.cc/</loc>
+    <lastmod>2020-02-02T01:20:03+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/post/kvm_base_archlinux/</loc>
     <lastmod>2020-01-31T18:49:07+08:00</lastmod>
   </url>
   
