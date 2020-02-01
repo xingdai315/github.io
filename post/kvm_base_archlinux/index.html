@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Ryan.Day">
+  <meta property="og:url" content="https://ddmmyy.cc/post/kvm_base_archlinux/">
+
+  <title>Kvm_base_Archlinux - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="Kvm_base_Archlinux - 🈚️他 ，唯🤚熟尔">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="🈚️他 ，唯🤚熟尔">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://ddmmyy.cc/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Kvm_base_Archlinux</h1>
+      <time class="post-date" datetime="2020-01-31 18:49:07 CST">31 Jan 2020</time>
+    </header>
+
+    <h3 id="kvm-base-archlinux">Kvm base Archlinux</h3>
+<blockquote>
+<p>本文是我在Arch系统下做kvm虚拟机的随笔，希望对有共同需求的人有所帮助</p>
+</blockquote>
+<h4 id="一系统基础">一、系统基础</h4>
+<p>硬件 &amp; 系统 （上个neofetch）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">OS: Arch Linux x86_64 
+Host: MS-7846 3.0 
+Kernel: 5.4.14-arch1-1 
+Uptime: <span style="color:#ae81ff">3</span> hours, <span style="color:#ae81ff">10</span> mins 
+Packages: <span style="color:#ae81ff">552</span> <span style="color:#f92672">(</span>pacman<span style="color:#f92672">)</span> 
+Shell: bash 5.0.11 
+Resolution: 2560x1440 
+WM: i3 
+Theme: Arc-Dark <span style="color:#f92672">[</span>GTK2/3<span style="color:#f92672">]</span> 
+Icons: Arc <span style="color:#f92672">[</span>GTK2/3<span style="color:#f92672">]</span> 
+Terminal: tilix 
+CPU: Intel i5-4590 <span style="color:#f92672">(</span>4<span style="color:#f92672">)</span> @ 3.700GHz 
+GPU: Intel HD Graphics 
+Memory: 4274MiB / 15879MiB
+</code></pre></div><h4 id="二硬件内核支持">二、硬件内核支持</h4>
+<p>​	硬件和内核支持请移步archlinux的wiki</p>
+<h4 id="三软件安装">三、软件安装</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pacman -Sy qemu libvirt virt-manager ovmf ebtables dnsmasq dmidecode bridge-utils <span style="color:#f92672">[</span>openbsd-netcat<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>cdrtools<span style="color:#f92672">]</span>
+</code></pre></div><ul>
+<li>[] 可选，如启动libvitd是还有依赖请自行安装</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">systemctl enable libvirtd
+systemctl start libvirtd
+</code></pre></div><h4 id="四网络设置">四、网络设置</h4>
+<p>重点讲一下网络部分的设置，其他部分网上信息很多。如果你希望使用网桥模式使用虚拟机这部分还是很重要的。</p>
+<p>我的系统使用的是systemd-networkd网络服务</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>none@mypc network<span style="color:#f92672">]</span>$ ll
+total <span style="color:#ae81ff">16</span>
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">106</span> Jan <span style="color:#ae81ff">26</span> 15:02 20-wired.network
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">39</span> Jan <span style="color:#ae81ff">26</span> 15:11 25-wireless.network
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">30</span> Jan <span style="color:#ae81ff">26</span> 15:03 br0.netdev
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">145</span> Jan <span style="color:#ae81ff">26</span> 15:09 br0.network
+</code></pre></div><p><strong>20-wired.network</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>Match<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>enp4s0
+
+<span style="color:#f92672">[</span>Network<span style="color:#f92672">]</span>
+<span style="color:#75715e">#Address=192.168.31.199</span>
+<span style="color:#75715e">#Gateway=192.168.31.1</span>
+<span style="color:#75715e">#DNS=192.168.31.1</span>
+Bridge<span style="color:#f92672">=</span>br0
+</code></pre></div><p><strong>br0.network</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>Match<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>enp4s0
+<span style="color:#f92672">[</span>Match<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>br0
+
+<span style="color:#f92672">[</span>Network<span style="color:#f92672">]</span>
+Address<span style="color:#f92672">=</span>192.168.31.199
+Gateway<span style="color:#f92672">=</span>192.168.31.1
+DNS<span style="color:#f92672">=</span>192.168.31.1
+<span style="color:#f92672">[</span>Link<span style="color:#f92672">]</span>
+MACAddress<span style="color:#f92672">=</span>44:8a:5b:d2:79:eb	<span style="color:#75715e">#这里是enp4s0的MAC地址</span>
+</code></pre></div><p><strong>br0.netdev</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>NetDev<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>br0
+Kind<span style="color:#f92672">=</span>bridge
+</code></pre></div><p>配置完成后重启网络设备</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">systemctl daemon-reload
+systemctl restart systemd-networkd
+</code></pre></div><p>网络信息，IP已经绑定在br0上了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>none@mypc network<span style="color:#f92672">]</span>$ ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp4s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc fq_codel master br0 state UP group default qlen <span style="color:#ae81ff">1000</span>
+    link/ether 44:8a:5b:d2:79:eb brd ff:ff:ff:ff:ff:ff
+3: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP group default qlen <span style="color:#ae81ff">1000</span>
+    link/ether 44:8a:5b:d2:79:eb brd ff:ff:ff:ff:ff:ff
+    inet 192.168.31.199/24 brd 192.168.31.255 scope global br0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::468a:5bff:fed2:79eb/64 scope link 
+
+</code></pre></div><p>网络上基本都是使用brctl和ip操作的临时生效方式，我这里就不展示了。一搜一大堆。</p>
+<p>ping一下外网，如果正常就可以进行下一步操作了。</p>
+<h4 id="四安装">四、安装</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">sudo virt-install --virt-type<span style="color:#f92672">=</span>kvm --name<span style="color:#f92672">=</span>ctos7m <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--disk path<span style="color:#f92672">=</span>/home/virtual/vm-master.raw,format<span style="color:#f92672">=</span>raw,bus<span style="color:#f92672">=</span>virtio,size<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--graphics none --vcpus <span style="color:#ae81ff">2</span> --ram<span style="color:#f92672">=</span><span style="color:#ae81ff">1024</span> --location<span style="color:#f92672">=</span>/home/iso/CentOS-7-x86_64-DVD-1908.iso <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--network bridge<span style="color:#f92672">=</span>br0,model<span style="color:#f92672">=</span>virtio <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--console<span style="color:#f92672">=</span>pty,target_type<span style="color:#f92672">=</span>serial <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--extra-args<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;console=tty0 console=ttyS0&#34;</span>
+</code></pre></div><pre><code>[none@mypc network]$ sudo virsh list --all
+[sudo] password for none: 
+ Id   Name      State
+-------------------------
+ 1    ctos7n1   running
+ 2    ctos7m    running
+</code></pre>
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="https://ddmmyy.cc/">
+          <span itemprop="name">Ryan.Day</span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

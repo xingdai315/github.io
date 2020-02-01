@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://ddmmyy.cc/post/kvm_base_archlinux/</loc>
+    <lastmod>2020-01-31T18:49:07+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/post/</loc>
+    <lastmod>2020-01-31T18:49:07+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/</loc>
+    <lastmod>2020-01-31T18:49:07+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/post/docker%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2020-01-31T18:29:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/post/%E5%A4%9A%E7%A1%AC%E7%9B%98%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8/</loc>
+    <lastmod>2020-01-31T18:16:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://ddmmyy.cc/tags/</loc>
+  </url>
+  
+</urlset>

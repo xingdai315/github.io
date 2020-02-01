@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Ryan.Day">
+  <meta property="og:url" content="https://ddmmyy.cc/post/%E5%A4%9A%E7%A1%AC%E7%9B%98%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8/">
+
+  <title>Mixed_mode_bootsys - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="Mixed_mode_bootsys - 🈚️他 ，唯🤚熟尔">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="🈚️他 ，唯🤚熟尔">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://ddmmyy.cc/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Mixed_mode_bootsys</h1>
+      <time class="post-date" datetime="2020-01-31 18:16:27 CST">31 Jan 2020</time>
+    </header>
+
+    <h3 id="多硬盘混合模式启动">多硬盘混合模式启动</h3>
+<h4 id="一缘起">一、缘起</h4>
+<blockquote>
+<p>老台式机主机已经安装了win10,目前有两块硬盘三星evo 120G系统盘，WD1T数据盘。
+之前安装系统还是MBR方式，新增M.2 Nvme固态盘（PCIe转接卡）安装Linux（使用uefi +GPT方式</p>
+</blockquote>
+<pre><code>Base Board Information 
+Manufacturer: MSI
+Product Name: H97M-E35 (MS-7846)
+</code></pre><h4 id="二遇到的问题">二、遇到的问题</h4>
+<ul>
+<li>
+<p>m2+pci-e转接方式重启电脑有时候不识别</p>
+<p>主机关机加电开机进入BIOS，可以正常识别Nvme固态盘，热重启进入BIOS无法找到。</p>
+</li>
+<li>
+<p>BIOS启动模式legacy 和 UEFI方式不兼容</p>
+<p>MSI主板提供了legacy、UEFI和混合模式启动，实际使用中发现以UEFI方式进入Linux系统后，重新写入EFI信息重启进入BIOS 可以显示EFI启动项并正常进入系统（此时windows无法启动）。切换到legacy+UEFI模式后windows可正常启动，但是Linux的UEFI引导信息丢失（再切换回UEFI模式也丢失了信息）</p>
+</li>
+</ul>
+<h4 id="三解决方式">三、解决方式</h4>
+<ul>
+<li>
+<p>关闭BIOS中快速启动项</p>
+</li>
+<li>
+<p>保持BIOS中启动项为混合模式，开机无感进入win10模式。通过开机选项键（F11 不同主办可能不同）</p>
+<p>选择uefi:built-in efi shell ，通过map指令查看目前磁盘分区。找到Nvme磁盘的efi分区。我这里是blk0</p>
+<p>执行</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">blk0: 
+  
+<span style="color:#ae81ff">\E</span>FI<span style="color:#ae81ff">\a</span>RGrub<span style="color:#ae81ff">\g</span>rubx64.efi
+</code></pre></div><p>就可以进入GRUB然后进入Linux （aRGrub是我自己系统的目录）</p>
+<p>每次手动执行有点累&hellip;我这里在efi分区下增加了startup.nsh脚本，这个搜索一下有很多结果。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>none@mypc ~<span style="color:#f92672">]</span>$ cat /boot/efi/startup.nsh 
+blk0:<span style="color:#ae81ff">\E</span>FI<span style="color:#ae81ff">\a</span>RGrub<span style="color:#ae81ff">\g</span>rubx64.efi
+</code></pre></div><p>进入efi shell后再按下回车执行startup脚本即可
+😃</p>
+</li>
+</ul>
+
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="https://ddmmyy.cc/">
+          <span itemprop="name">Ryan.Day</span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

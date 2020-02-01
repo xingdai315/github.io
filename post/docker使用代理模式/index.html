@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Ryan.Day">
+  <meta property="og:url" content="https://ddmmyy.cc/post/docker%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+
+  <title>Docker使用代理模式 - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="Docker使用代理模式 - 🈚️他 ，唯🤚熟尔">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="🈚️他 ，唯🤚熟尔">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://ddmmyy.cc/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Docker使用代理模式</h1>
+      <time class="post-date" datetime="2020-01-31 18:29:44 CST">31 Jan 2020</time>
+    </header>
+
+    <h3 id="docker使用代理模式">docker使用代理模式</h3>
+<p>基于systemd的override方式</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">systemctl edit docker
+</code></pre></div><p>填写代理信息</p>
+<pre><code>[Service]
+Environment=&quot;HTTP_PROXY=http://192.168.31.199:8118/&quot; &quot;HTTPS_PROXY=http://192.168.31.199:8118/&quot;
+&quot;NO_PROXY=localhost,127.0.0.1,registry.docker-cn.com&quot;
+</code></pre><p>读取配置&amp;重启</p>
+<pre><code>systemctl daemon-reload &amp;&amp; systemctl restart docker
+</code></pre>
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="https://ddmmyy.cc/">
+          <span itemprop="name">Ryan.Day</span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

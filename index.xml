@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>🈚️他 ，唯🤚熟尔</title>
+    <link>https://ddmmyy.cc/</link>
+    <description>Recent content on 🈚️他 ，唯🤚熟尔</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Copyright (c) 2020.</copyright>
+    <lastBuildDate>Fri, 31 Jan 2020 18:49:07 +0800</lastBuildDate>
+    
+	<atom:link href="https://ddmmyy.cc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kvm_base_Archlinux</title>
+      <link>https://ddmmyy.cc/post/kvm_base_archlinux/</link>
+      <pubDate>Fri, 31 Jan 2020 18:49:07 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/kvm_base_archlinux/</guid>
+      <description>Kvm base Archlinux  本文是我在Arch系统下做kvm虚拟机的随笔，希望对有共同需求的人有所帮助
+ 一、系统基础 硬件 &amp;amp; 系统 （上个neofetch）
+OS: Arch Linux x86_64 Host: MS-7846 3.0 Kernel: 5.4.14-arch1-1 Uptime: 3 hours, 10 mins Packages: 552 (pacman) Shell: bash 5.0.11 Resolution: 2560x1440 WM: i3 Theme: Arc-Dark [GTK2/3] Icons: Arc [GTK2/3] Terminal: tilix CPU: Intel i5-4590 (4) @ 3.700GHz GPU: Intel HD Graphics Memory: 4274MiB / 15879MiB 二、硬件内核支持 ​	硬件和内核支持请移步archlinux的wiki
+三、软件安装 pacman -Sy qemu libvirt virt-manager ovmf ebtables dnsmasq dmidecode bridge-utils [openbsd-netcat] [cdrtools]  [] 可选，如启动libvitd是还有依赖请自行安装  systemctl enable libvirtd systemctl start libvirtd 四、网络设置 重点讲一下网络部分的设置，其他部分网上信息很多。如果你希望使用网桥模式使用虚拟机这部分还是很重要的。</description>
+    </item>
+    
+    <item>
+      <title>Docker使用代理模式</title>
+      <link>https://ddmmyy.cc/post/docker%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 31 Jan 2020 18:29:44 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/docker%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</guid>
+      <description>docker使用代理模式 基于systemd的override方式
+systemctl edit docker 填写代理信息
+[Service] Environment=&amp;quot;HTTP_PROXY=http://192.168.31.199:8118/&amp;quot; &amp;quot;HTTPS_PROXY=http://192.168.31.199:8118/&amp;quot; &amp;quot;NO_PROXY=localhost,127.0.0.1,registry.docker-cn.com&amp;quot; 读取配置&amp;amp;重启
+systemctl daemon-reload &amp;amp;&amp;amp; systemctl restart docker </description>
+    </item>
+    
+    <item>
+      <title>Mixed_mode_bootsys</title>
+      <link>https://ddmmyy.cc/post/%E5%A4%9A%E7%A1%AC%E7%9B%98%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8/</link>
+      <pubDate>Fri, 31 Jan 2020 18:16:27 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/%E5%A4%9A%E7%A1%AC%E7%9B%98%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8/</guid>
+      <description>多硬盘混合模式启动 一、缘起  老台式机主机已经安装了win10,目前有两块硬盘三星evo 120G系统盘，WD1T数据盘。 之前安装系统还是MBR方式，新增M.2 Nvme固态盘（PCIe转接卡）安装Linux（使用uefi +GPT方式
+ Base Board Information Manufacturer: MSI Product Name: H97M-E35 (MS-7846) 二、遇到的问题   m2+pci-e转接方式重启电脑有时候不识别
+主机关机加电开机进入BIOS，可以正常识别Nvme固态盘，热重启进入BIOS无法找到。
+  BIOS启动模式legacy 和 UEFI方式不兼容
+MSI主板提供了legacy、UEFI和混合模式启动，实际使用中发现以UEFI方式进入Linux系统后，重新写入EFI信息重启进入BIOS 可以显示EFI启动项并正常进入系统（此时windows无法启动）。切换到legacy+UEFI模式后windows可正常启动，但是Linux的UEFI引导信息丢失（再切换回UEFI模式也丢失了信息）
+  三、解决方式   关闭BIOS中快速启动项
+  保持BIOS中启动项为混合模式，开机无感进入win10模式。通过开机选项键（F11 不同主办可能不同）
+选择uefi:built-in efi shell ，通过map指令查看目前磁盘分区。找到Nvme磁盘的efi分区。我这里是blk0
+执行
+blk0: \EFI\aRGrub\grubx64.efi 就可以进入GRUB然后进入Linux （aRGrub是我自己系统的目录）
+每次手动执行有点累&amp;hellip;我这里在efi分区下增加了startup.nsh脚本，这个搜索一下有很多结果。
+[none@mypc ~]$ cat /boot/efi/startup.nsh blk0:\EFI\aRGrub\grubx64.efi 进入efi shell后再按下回车执行startup脚本即可 😃
+  </description>
+    </item>
+    
+  </channel>
+</rss>
