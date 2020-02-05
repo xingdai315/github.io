@@ -7,10 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright (c) 2020.</copyright>
-    <lastBuildDate>Sun, 02 Feb 2020 01:20:03 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 05 Feb 2020 11:32:03 +0800</lastBuildDate>
     
 	<atom:link href="https://ddmmyy.cc/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>路由器自动更新godaddy解析记录</title>
+      <link>https://ddmmyy.cc/post/%E8%B7%AF%E7%94%B1%E5%99%A8%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0godaddy%E8%A7%A3%E6%9E%90%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Wed, 05 Feb 2020 11:32:03 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/%E8%B7%AF%E7%94%B1%E5%99%A8%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0godaddy%E8%A7%A3%E6%9E%90%E8%AE%B0%E5%BD%95/</guid>
+      <description>最近又启用了老的路由器，基于openwrt系统，没有固件可用root后凑合用了
+ 有时候会有ssh回到家里路由器openwrt系统里操作的需求，以前一直走ip。最近电信renew的比较频繁公网ip经常变化所以还是走域名吧。
+ 环境是openwrt 12，确定命令正常即可； pppoe重新获取公网ip后会执行ip-up.d 目录下脚本，利用这个特性进行ddns记录更新。网上有通过crontab定时刷的方式比较rube，而且有的dns平台有api调用限制； 脚本位置 /etc/ppp/ip-up.d/autoddns.sh  #/bin/sh # Openwrt system # Positon /etc/ppp/ip-up.d # Update godaddy&amp;#39;s dns resolved record once global ip changed # G_Key=&amp;#39;your_key&amp;#39; G_Secret=&amp;#39;youer_sec&amp;#39; Domain=&amp;#39;example.com&amp;#39; Name=&amp;#39;hostname&amp;#39; Type=&amp;#39;A&amp;#39; IP=$(ifconfig |awk -F&amp;#34;[: ]&amp;#34; &amp;#39;/pppoe-wan/{getline;print $13}&amp;#39;) Upstatus=$(curl -kLsXPUT -H&amp;#34;Authorization: sso-key ${G_Key}:${G_Secret}&amp;#34; -H &amp;#34;Content-type: application/json&amp;#34; \ https://api.godaddy.com/v1/domains/${Domain}/records/${Type}/${Name} \ -d &amp;#34;[{\&amp;#34;data\&amp;#34;:\&amp;#34;${IP}\&amp;#34;,\&amp;#34;ttl\&amp;#34;:600}]&amp;#34; 2&amp;gt;/dev/null) exit 0 重启下网络看看新的IP解析是否更新到了godday解析，空间有限就不记录运行日志了。
+enjoy</description>
+    </item>
     
     <item>
       <title>从github下载龟速暂时解决方法</title>
