@@ -7,10 +7,31 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright (c) 2020.</copyright>
-    <lastBuildDate>Fri, 07 Feb 2020 12:32:50 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 11 Feb 2020 13:12:46 +0800</lastBuildDate>
     
 	<atom:link href="https://ddmmyy.cc/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Merlin系统使用过程的笔记</title>
+      <link>https://ddmmyy.cc/post/merlin%E7%B3%BB%E7%BB%9F%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E7%9A%84%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Tue, 11 Feb 2020 13:12:46 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/merlin%E7%B3%BB%E7%BB%9F%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E7%9A%84%E7%AC%94%E8%AE%B0/</guid>
+      <description>r7000上手两天直接刷了merlin x7.9.1 ,过程很简单就是v1版多重置了一次
+下面是使用中的问题，会持续记录一下
+ 1.godaddy域名更新脚本 之前写过在openwrt下的自动更新脚本设置，换到梅林系统后看到软件中心有godday的更新脚本就安装了一下。发现也是inteval retry的模式，填好以后就没管他。过了一天发现godday没有更新。估计是插件有问题，手工执行update脚本可以更新，估计是计划任务出了问题。懒得从这个角度排查了，梅林肯定也有触发脚本，找一下果然有
+xing@R7000-2992:/tmp/home/root# cat /jffs/scripts/wan-start #!/bin/sh /usr/bin/onwanstart.sh sh /koolshare/scripts/gdddns_update.sh /usr/bin/plugin.sh start 把脚本扔过去，我看插件作者的脚本写的也不错就不换成我自己的了。
+2.dns上游解析速度慢解决 关于DNS解析比较容易理解，如果你还要同时科学上网的话就要注意一下了。梅林上用的也是dnsmasq做本地的代理和缓存。根据不同的规则决定上游DNS的选择（对国内的网站解析速度优先，国外站点安全优先）。
+最初的设置是
+  客户端DNS -&amp;gt; 路由器LAN地址192.168.50.1
+  路由器dnsmasq设置默认DNS 119.29.29.29 dnspod,
+  gfvv域名根据域名匹配解析转发本地dns2socks进程127.0.0.1 9137端口 -&amp;gt; 8.8.8.8#53
+  但是在客户端（resolv指向50.1),解析国内域名大概率超时无法返回结果。测试了很多地方也找不到原因，后来随后把梅林后台默认上游DNS服务器设置 自动获取远程网络地址 问题居然就解决了。
+我的配置文件
+xing@R7000-2992:/tmp/home/root# cat /tmp/etc/dnsmasq.conf pid-file=/var/run/dnsmasq.pid ... no-resolv all-servers server=219.141.140.10#53 server=219.141.136.10#53 no-negcache ... #dnsmasq.d里的conf优先级高于上面的server，从而实现分流 conf-dir=/jffs/configs/dnsmasq.d 补充一下dnsmasq的解析工作的流程
+ 本地hosts，可以是系统提供的/etc/hosts, 也可以关闭系统的自己指定hosts文件，支持多文件更灵活； 操作系统提供的上游DNS，/etc/resolv.conf,一般做法是指定为localhost，让dnsmasq自己决定上游，也可以关闭它； /youerpath/dnsmasq.d/* 最后才是上游DNS  3. 与二级路由互通静态路由 工作电脑上运行了kvm k8s，网络还是以前的网段。k8s改ip很麻烦，暂时二级路由过渡一下，对网络不熟记录一下，二级路由wan连接一级路由lan，分配ip 50.2二级路由lan地址31.1；主路由增加静态路由下面最后一条，实现主路由到二级路由下资源的访问。</description>
+    </item>
     
     <item>
       <title>路由器不可描述操作</title>
