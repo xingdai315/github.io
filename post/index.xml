@@ -34,29 +34,6 @@ xing@R7000-2992:/tmp/home/root# cat /tmp/etc/dnsmasq.conf pid-file=/var/run/dnsm
     </item>
     
     <item>
-      <title>路由器不可描述操作</title>
-      <link>https://ddmmyy.cc/post/%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8D%E5%8F%AF%E6%8F%8F%E8%BF%B0%E6%93%8D%E4%BD%9C/</link>
-      <pubDate>Fri, 07 Feb 2020 12:32:50 +0800</pubDate>
-      
-      <guid>https://ddmmyy.cc/post/%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8D%E5%8F%AF%E6%8F%8F%E8%BF%B0%E6%93%8D%E4%BD%9C/</guid>
-      <description>对路由器的不可描述操作
- 粗粮R2D路由，一直桥接做samba存储没折腾过，最近主力路由故障重新启用。一查才发现这款坑爹的产品由于底层驱动问题就没有能刷的第三方固件。只能root后在官方系统上搞一搞凑合用了。
- 0.再吐个槽 最初以为好歹也是基于openwrt开发的，怎么也差不到那里去。root后进系统ps一看，我勒个去又激起了我的系统洁癖，挨个看init.d里的脚本然后disable，操作过程中突然ssh断开了，重新连接后发现系统被恢复成稳定版。wtf 还有这种操作（这部分以后有时间再吐槽吧，不想看那些烂脚本了）。
-1. v2ray替代ss 言归正传，近期ss不稳定，准备换v2ray试试。server端就不描述了，一键脚本安装就可以了。准备再这台R2D上弄个透明代理。开发版本root以后发现系统里居然已经有了ss了，不可描述啊。
-下载
-v2ray-linux-arm.zip 找到对应的版本下载就可以了
-我的cpu虽然的v7的但是由于系统太老执行报错，就继续用v5版本了
-cat /etc/openwrt_release (这个版本&amp;hellip;..6年前的极路由版本都比他高)
-OpenWrt Attitude Adjustment 12.09.1 安装
-建立目录 并复制下载的客户端程序
-# mkdir -p /etc/config/v2ray # ls /etc/config/v2ray/ config.json v2ray 配置文件
-全部太长了，我是从手机客户端导出的，只贴协议部分。任意门协议监听本地1234端口
-... &amp;#34;inbounds&amp;#34; : [ { &amp;#34;protocol&amp;#34;: &amp;#34;dokodemo-door&amp;#34;, &amp;#34;port&amp;#34;: 1234, &amp;#34;settings&amp;#34;: { &amp;#34;network&amp;#34;: &amp;#34;tcp,udp&amp;#34;, &amp;#34;timeout&amp;#34;: 30, &amp;#34;followRedirect&amp;#34;: true } } ] ... 启动
-我这里使用的supervisord方式启动，保证守护进程始终存在。网上说之前不能以superisord方式启动，我使用的4.21版本没问题。
-#!/bin/sh /etc/rc.common # Look at /lib/functions/service.sh on a running system for explanations of what other SERVICE_ # options you can use, and when you might want them.</description>
-    </item>
-    
-    <item>
       <title>路由器自动更新godaddy解析记录</title>
       <link>https://ddmmyy.cc/post/%E8%B7%AF%E7%94%B1%E5%99%A8%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0godaddy%E8%A7%A3%E6%9E%90%E8%AE%B0%E5%BD%95/</link>
       <pubDate>Wed, 05 Feb 2020 11:32:03 +0800</pubDate>
