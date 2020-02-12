@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.64.1" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Ryan.Day">
+  <meta property="og:url" content="https://ddmmyy.cc/post/%E5%86%8D%E6%AC%A1%E8%A7%A3%E5%86%B3s3.amazonaws.com%E4%B8%8B%E8%BD%BD%E6%85%A2%E9%97%AE%E9%A2%98/">
+
+  <title>再次解决s3.amazonaws - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="再次解决s3.amazonaws - 🈚️他 ，唯🤚熟尔">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/ohmysite.ico" />
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="🈚️他 ，唯🤚熟尔">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://ddmmyy.cc/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">再次解决s3.amazonaws</h1>
+      <time class="post-date" datetime="2020-02-12 15:11:17 CST">12 Feb 2020</time>
+    </header>
+
+    <blockquote>
+<p>偶然发现电脑通过联通手机4G热点上网，在s3.amazon下载十分的快，有大几百K很是不赖。所以思量这通过手机热点和家里有线结合使用</p>
+</blockquote>
+<h4 id="1网络状况">1.网络状况</h4>
+<p><strong>工作电脑</strong></p>
+<p>网桥设备使用网桥设备br0.network  ，网络地址 192.168.31.199,出口北京电信</p>
+<p><strong>手机设备</strong></p>
+<p>联通4G，连接后获取ip地址 192.168.43.154</p>
+<p><strong>理想状态</strong></p>
+<p>平时通过有线设备上网，因为工作机使用kvm桥接，所以虚拟了bridge设备（无线网卡不支持）。遇到下载问题开打手机热点自动连接，走无线设备路由上网。所以要解决的就是静态路由优先级的问题。</p>
+<h4 id="2设置网络设备meric">2.设置网络设备meric</h4>
+<p>win和mac下对跳跃点设置比较简单，linux稍微麻烦了点。查到了ubuntu关于systemd.network设置的文档，Archlinux应该也是通用的。 链接如下  <a href="http://manpages.ubuntu.com/manpages.gz/bionic/man5/systemd.network.5.gz">systemd.network.5.gz</a></p>
+<p><strong>无线设备管理</strong></p>
+<p>我这里使用的 systemd + iwd 的方式管理无线连接，其他方式参考即可。linux 网络设备管理的方式太多了，让人烟花缭乱，目前使用systemd.network 统一管理清爽多了。首先保证打开热点网络链接正常再往下进行。</p>
+<p><strong>无线配置文件</strong></p>
+<p>在DHCP section增加 RouteMetric字段，跳跃点512</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cat 25-wireless.network 
+<span style="color:#f92672">[</span>Match<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>wlp3s0
+
+<span style="color:#f92672">[</span>Network<span style="color:#f92672">]</span>
+DHCP<span style="color:#f92672">=</span>ipv4
+
+<span style="color:#f92672">[</span>DHCP<span style="color:#f92672">]</span>
+RouteMetric<span style="color:#f92672">=</span><span style="color:#ae81ff">512</span>
+</code></pre></div><p><strong>网桥配置文件</strong></p>
+<p>如果是真实网卡就是网卡的配置文件，增加[Route] section,注意这里的写法和[DHCP]不同;</p>
+<p>Metric的值小于无线设备路由的值</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cat br0.network 
+<span style="color:#f92672">[</span>Match<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>enp4s0
+<span style="color:#f92672">[</span>Match<span style="color:#f92672">]</span>
+Name<span style="color:#f92672">=</span>br0
+
+<span style="color:#f92672">[</span>Network<span style="color:#f92672">]</span>
+Address<span style="color:#f92672">=</span>192.168.31.199
+<span style="color:#75715e">#Gateway=192.168.31.1</span>
+<span style="color:#75715e">#DNS=192.168.31.1</span>
+
+<span style="color:#f92672">[</span>Route<span style="color:#f92672">]</span>
+<span style="color:#75715e">#Destination=default</span>
+Gateway<span style="color:#f92672">=</span>192.168.31.1
+Metric<span style="color:#f92672">=</span><span style="color:#ae81ff">1024</span>
+</code></pre></div><p><strong>重启网络&amp;查看路由表</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ sudo systemctl restart systemd-networkd
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ip route
+default via 192.168.43.1 dev wlp3s0 proto dhcp src 192.168.43.154 metric <span style="color:#ae81ff">512</span> 
+default via 192.168.31.1 dev br0 proto static metric <span style="color:#ae81ff">1024</span> 
+192.168.31.0/24 dev br0 proto kernel scope link src 192.168.31.199 
+192.168.43.0/24 dev wlp3s0 proto kernel scope link src 192.168.43.154 
+192.168.43.1 dev wlp3s0 proto dhcp scope link src 192.168.43.154 metric <span style="color:#ae81ff">512</span> 
+</code></pre></div><p>这里可以看到网桥设备地址 192.168.31.199 ; 无线网卡地址 192.168.43.154</p>
+<p>两条出口默认路由无线优先</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl cip.cc
+IP	: 124.64.19.132
+地址	: 中国  北京
+运营商	: 联通
+数据二	: 北京市丰台区 | 联通
+数据三	: 中国北京北京 | 联通
+URL	: http://www.cip.cc/124.64.19.132
+</code></pre></div><p>关闭热点在测试</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ip route
+default via 192.168.31.1 dev br0 proto static metric <span style="color:#ae81ff">1024</span> 
+192.168.31.0/24 dev br0 proto kernel scope link src 192.168.31.199 
+
+$ curl cip.cc
+IP	: 12.23.10.102		//安全起见，这里随便改了一个
+地址	: 中国  北京
+运营商	: 电信
+数据二	: 北京市 | 电信
+数据三	: 中国北京北京 | 电信
+</code></pre></div><h4 id="3-上图">3. 上图</h4>
+<p>网上随便找了一个连接，测试😀</p>
+<p><img src="/images/speed.jpg" alt=""></p>
+
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="https://ddmmyy.cc/">
+          <span itemprop="name">Ryan.Day</span>
+
+          <br>
+
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

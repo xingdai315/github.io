@@ -7,10 +7,35 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright (c) 2020.</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 13:12:46 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 12 Feb 2020 15:11:17 +0800</lastBuildDate>
     
 	<atom:link href="https://ddmmyy.cc/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>再次解决s3.amazonaws</title>
+      <link>https://ddmmyy.cc/post/%E5%86%8D%E6%AC%A1%E8%A7%A3%E5%86%B3s3.amazonaws.com%E4%B8%8B%E8%BD%BD%E6%85%A2%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Wed, 12 Feb 2020 15:11:17 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/%E5%86%8D%E6%AC%A1%E8%A7%A3%E5%86%B3s3.amazonaws.com%E4%B8%8B%E8%BD%BD%E6%85%A2%E9%97%AE%E9%A2%98/</guid>
+      <description>偶然发现电脑通过联通手机4G热点上网，在s3.amazon下载十分的快，有大几百K很是不赖。所以思量这通过手机热点和家里有线结合使用
+ 1.网络状况 工作电脑
+网桥设备使用网桥设备br0.network ，网络地址 192.168.31.199,出口北京电信
+手机设备
+联通4G，连接后获取ip地址 192.168.43.154
+理想状态
+平时通过有线设备上网，因为工作机使用kvm桥接，所以虚拟了bridge设备（无线网卡不支持）。遇到下载问题开打手机热点自动连接，走无线设备路由上网。所以要解决的就是静态路由优先级的问题。
+2.设置网络设备meric win和mac下对跳跃点设置比较简单，linux稍微麻烦了点。查到了ubuntu关于systemd.network设置的文档，Archlinux应该也是通用的。 链接如下 systemd.network.5.gz
+无线设备管理
+我这里使用的 systemd + iwd 的方式管理无线连接，其他方式参考即可。linux 网络设备管理的方式太多了，让人烟花缭乱，目前使用systemd.network 统一管理清爽多了。首先保证打开热点网络链接正常再往下进行。
+无线配置文件
+在DHCP section增加 RouteMetric字段，跳跃点512
+$ cat 25-wireless.network [Match] Name=wlp3s0 [Network] DHCP=ipv4 [DHCP] RouteMetric=512 网桥配置文件
+如果是真实网卡就是网卡的配置文件，增加[Route] section,注意这里的写法和[DHCP]不同;
+Metric的值小于无线设备路由的值
+$ cat br0.network [Match] Name=enp4s0 [Match] Name=br0 [Network] Address=192.168.31.199 #Gateway=192.168.31.1 #DNS=192.168.31.1 [Route] #Destination=default Gateway=192.168.31.1 Metric=1024 重启网络&amp;amp;查看路由表
+$ sudo systemctl restart systemd-networkd $ ip route default via 192.168.43.1 dev wlp3s0 proto dhcp src 192.</description>
+    </item>
     
     <item>
       <title>Merlin系统使用过程的笔记</title>
