@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright (c) 2020.</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 15:11:17 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 16 Feb 2020 17:24:13 +0800</lastBuildDate>
     
 	<atom:link href="https://ddmmyy.cc/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>I3wm</title>
+      <link>https://ddmmyy.cc/post/i3wm/</link>
+      <pubDate>Sun, 16 Feb 2020 17:24:13 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/i3wm/</guid>
+      <description>十几年前注册的yupoo居然还能登陆，以前的图没了，发两张测试一下图床
+桌面背景用脚本拉的 https://bz.zzzmh.cn/ 打个广告，网站不错，喜欢的可以donate
+i3wm全家桶，有喜欢的以后可以pull上来配置文件</description>
+    </item>
     
     <item>
       <title>再次解决s3.amazonaws</title>

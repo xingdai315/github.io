@@ -8,10 +8,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Ryan.Day">
-  <meta property="og:url" content="https://ddmmyy.cc/post/docker%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+  <meta property="og:url" content="https://ddmmyy.cc/post/i3wm/">
 
-  <title>Docker使用代理模式 - 🈚️他 ，唯🤚熟尔</title>
-  <meta property="og:title" content="Docker使用代理模式 - 🈚️他 ，唯🤚熟尔">
+  <title>I3wm - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="I3wm - 🈚️他 ，唯🤚熟尔">
   <meta property="og:type" content="article">
   <meta name="description" content="">
 
@@ -33,20 +33,16 @@
 
   <article class="post">
     <header class="post-header">
-      <h1 class="post-title">Docker使用代理模式</h1>
-      <time class="post-date" datetime="2020-01-31 18:29:44 CST">31 Jan 2020</time>
+      <h1 class="post-title">I3wm</h1>
+      <time class="post-date" datetime="2020-02-16 17:24:13 CST">16 Feb 2020</time>
     </header>
 
-    <h3 id="docker使用代理模式">docker使用代理模式</h3>
-<p>基于systemd的override方式</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">systemctl edit docker
-</code></pre></div><p>填写代理信息</p>
-<pre><code>[Service]
-Environment=&quot;HTTP_PROXY=http://192.168.31.199:8118/&quot; &quot;HTTPS_PROXY=http://192.168.31.199:8118/&quot;
-&quot;NO_PROXY=localhost,127.0.0.1,registry.docker-cn.com&quot;
-</code></pre><p>读取配置&amp;重启</p>
-<pre><code>systemctl daemon-reload &amp;&amp; systemctl restart docker
-</code></pre>
+    <p>十几年前注册的yupoo居然还能登陆，以前的图没了，发两张测试一下图床</p>
+<p>桌面背景用脚本拉的 <a href="https://bz.zzzmh.cn/">https://bz.zzzmh.cn/</a>  打个广告，网站不错，喜欢的可以donate</p>
+<p>i3wm全家桶，有喜欢的以后可以pull上来配置文件</p>
+<p><img src="http://pic.yupoo.com/davistar_v/1edd56af/94ad9d59.png" alt="desktop1"></p>
+<p><img src="http://pic.yupoo.com/davistar_v/aef0604f/f814853c.png" alt=""></p>
+
 
   </article>
 
