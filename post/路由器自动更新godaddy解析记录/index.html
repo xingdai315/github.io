@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Hugo 0.64.1" />
+  <meta name="generator" content="Hugo 0.65.3" />
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,9 +57,9 @@ Domain<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;examp
 Name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;hostname&#39;</span>
 Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;A&#39;</span>
 IP<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>ifconfig |awk -F<span style="color:#e6db74">&#34;[: ]&#34;</span> <span style="color:#e6db74">&#39;/pppoe-wan/{getline;print $13}&#39;</span><span style="color:#66d9ef">)</span>
-Upstatus<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl -kLsXPUT -H<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Authorization: sso-key </span><span style="color:#e6db74">${</span>G_Key<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>G_Secret<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -H <span style="color:#e6db74">&#34;Content-type: application/json&#34;</span> <span style="color:#ae81ff">\
+Upstatus<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl -kLsXPUT -H<span style="color:#e6db74">&#34;Authorization: sso-key </span><span style="color:#e6db74">${</span>G_Key<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>G_Secret<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -H <span style="color:#e6db74">&#34;Content-type: application/json&#34;</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>https://api.godaddy.com/v1/domains/<span style="color:#e6db74">${</span>Domain<span style="color:#e6db74">}</span>/records/<span style="color:#e6db74">${</span>Type<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>Name<span style="color:#e6db74">}</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>-d <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[{\&#34;data\&#34;:\&#34;</span><span style="color:#e6db74">${</span>IP<span style="color:#e6db74">}</span><span style="color:#e6db74">\&#34;,\&#34;ttl\&#34;:600}]</span><span style="color:#e6db74">&#34;</span> 2&gt;/dev/null<span style="color:#66d9ef">)</span>
+</span><span style="color:#ae81ff"></span>-d <span style="color:#e6db74">&#34;[{\&#34;data\&#34;:\&#34;</span><span style="color:#e6db74">${</span>IP<span style="color:#e6db74">}</span><span style="color:#e6db74">\&#34;,\&#34;ttl\&#34;:600}]&#34;</span> 2&gt;/dev/null<span style="color:#66d9ef">)</span>
 exit <span style="color:#ae81ff">0</span>
 </code></pre></div><p>重启下网络看看新的IP解析是否更新到了godday解析，空间有限就不记录运行日志了。</p>
 <p>enjoy</p>
