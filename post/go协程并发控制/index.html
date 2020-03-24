@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.65.3" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Ryan.Day">
+  <meta property="og:url" content="https://ddmmyy.cc/post/go%E5%8D%8F%E7%A8%8B%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/">
+
+  <title>Go协程并发控制 - 🈚️他 ，唯🤚熟尔</title>
+  <meta property="og:title" content="Go协程并发控制 - 🈚️他 ，唯🤚熟尔">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/ohmysite.ico" />
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="🈚️他 ，唯🤚熟尔">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://ddmmyy.cc/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Go协程并发控制</h1>
+      <time class="post-date" datetime="2020-03-24 21:51:08 CST">24 Mar 2020</time>
+    </header>
+
+    <h4 id="go协程并发控制">go协程并发控制</h4>
+<p>learn go</p>
+<p>利用WaitGroup和阻塞channel实现协程并发控制,始终保持协程与核心数量相等</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">const</span> (
+    <span style="color:#a6e22e">conNum</span> = <span style="color:#ae81ff">4</span>	<span style="color:#75715e">//cpu cores
+</span><span style="color:#75715e"></span>)
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#a6e22e">wg</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>{}
+    <span style="color:#a6e22e">ch</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">bool</span>, <span style="color:#a6e22e">conNum</span>)
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">list</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">someApi</span>(<span style="color:#a6e22e">api_url</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">list</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatalln</span>(<span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">list</span> {
+        <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#ae81ff">1</span>)
+        <span style="color:#a6e22e">ch</span> <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">true</span>
+        <span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">wg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">url</span> <span style="color:#66d9ef">string</span>) {
+            <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">doSomeThing</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">url</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+            }
+            <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ch</span>
+            <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+        }(<span style="color:#a6e22e">wg</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>)
+    }
+    <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
+    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;process done.&#34;</span>)
+}
+</code></pre></div>
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          <link itemprop="url" href="https://ddmmyy.cc/">
+          <span itemprop="name">Ryan.Day</span>
+
+          <br>
+	
+		  
+          
+
+          
+
+          
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

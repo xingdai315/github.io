@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright (c) 2020.</copyright>
-    <lastBuildDate>Sun, 16 Feb 2020 17:24:13 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 24 Mar 2020 21:51:08 +0800</lastBuildDate>
     
 	<atom:link href="https://ddmmyy.cc/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go协程并发控制</title>
+      <link>https://ddmmyy.cc/post/go%E5%8D%8F%E7%A8%8B%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/</link>
+      <pubDate>Tue, 24 Mar 2020 21:51:08 +0800</pubDate>
+      
+      <guid>https://ddmmyy.cc/post/go%E5%8D%8F%E7%A8%8B%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/</guid>
+      <description>go协程并发控制 learn go
+利用WaitGroup和阻塞channel实现协程并发控制,始终保持协程与核心数量相等
+const ( conNum = 4	//cpu cores ) func main() { wg := &amp;amp;sync.WaitGroup{} ch := make(chan bool, conNum) var list map[string]string err := someApi(api_url, &amp;amp;list) if err != nil { log.Fatalln(err) } for k, v := range list { wg.Add(1) ch &amp;lt;- true go func(wg *sync.WaitGroup, id string, url string) { err := doSomeThing(id, url) if err != nil { log.Println(err) } &amp;lt;-ch defer wg.Done() }(wg, k, v) } wg.</description>
+    </item>
     
     <item>
       <title>I3wm</title>
